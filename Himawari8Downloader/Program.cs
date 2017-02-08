@@ -194,22 +194,29 @@ namespace Himawari8Downloader
 		{
 			DownloadStarted?.Invoke(null, null);
 
-			var start = DateTime.Now;
-
-			var imageInfo = GetLatestImageInfo();
-			if (imageInfo != null)
+			try
 			{
-				var image = AssembleImageFrom(imageInfo);
-				var imageFile = SaveImage(image);
+				var start = DateTime.Now;
 
-				Wallpaper.Set(new Uri(imageFile), Wallpaper.Style.Centered);
+				var imageInfo = GetLatestImageInfo();
+				if (imageInfo != null)
+				{
+					var image = AssembleImageFrom(imageInfo);
+					var imageFile = SaveImage(image);
+
+					Wallpaper.Set(new Uri(imageFile), Wallpaper.Style.Centered);
+				}
+
+				var end = DateTime.Now;
+
+				var duration = (end - start).TotalMilliseconds;
+
+				System.Diagnostics.Debug.WriteLine("Completed in " + duration + "ms");
 			}
+			catch (Exception)
+			{
 
-			var end = DateTime.Now;
-
-			var duration = (end - start).TotalMilliseconds;
-
-			System.Diagnostics.Debug.WriteLine("Completed in " + duration + "ms");
+			}
 
 			DownloadCompleted?.Invoke(null, null);
 		}
